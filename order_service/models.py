@@ -10,9 +10,17 @@ class Order(models.Model):
     price = models.FloatField()
     number_identification = models.IntegerField(primary_key = True)
     
+    def __str__(self):
+        return self.name + self.description
 
-class AditionalItems(models.Model):
-    
-    additional_quantity = models.IntegerField()
-    additional_price = models.FloatField()
-    additional_description = models.TextField(max_length = 100)
+
+class AddsItens(models.Model):
+
+    adds_name = models.CharField(max_length = 50)
+    adds_quantity = models.IntegerField()
+    adds_price = models.FloatField()
+    adds_description = models.TextField(max_length = 100)
+    adds_number_identification = models.IntegerField(primary_key = True)
+
+    def __str__(self):
+        return self.addition_name + self.addition_description

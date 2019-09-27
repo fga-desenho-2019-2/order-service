@@ -25,7 +25,7 @@ SECRET_KEY = '0(xtxk_d@p@n+$0!71_9o=tr9-8k@cr*!k-(sn0_!k#aw3!be_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 
 # Application definition
@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_swagger'
-    'rest_framework'
+    'rest_framework_swagger',
+    'rest_framework',
+    'order_service',
 ]
 
 MIDDLEWARE = [
