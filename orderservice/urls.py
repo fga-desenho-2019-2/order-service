@@ -17,5 +17,6 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
+    #path ('', get_swagger_view('Order Service API')),
     path('admin/', admin.site.urls),
 ]
