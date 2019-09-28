@@ -15,13 +15,12 @@ Including another URLconf
 """
 from rest_framework_swagger.views import get_swagger_view
 from django.contrib import admin
-from django.urls import path
-from order_service.views import order_serializer
+from django.urls import path, include
 
 
 urlpatterns = [
     path ('', get_swagger_view('Order Service API')),
     path('admin/', admin.site.urls),
-    path('register/', order_serializer, name='register')
+    url(r'^', include('order_service.urls')),
 
 ]
