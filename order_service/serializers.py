@@ -21,4 +21,4 @@ class AddsSerializer(serializers.ModelSerializer):
             adds_number_identification = self.validated_data['adds_number_identification']
         )
 
-        return addsitens
+        return addsItens
