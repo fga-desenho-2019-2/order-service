@@ -13,7 +13,7 @@ class Order(models.Model):
         return self.name
 
 
-class AddsItens(models.Model):
+class Adds(models.Model):
 
     adds_name = models.CharField(max_length = 50)
     adds_quantity = models.IntegerField()
@@ -21,4 +21,4 @@ class AddsItens(models.Model):
     adds_number_identification = models.IntegerField(primary_key = True)
 
     def __str__(self):
-        return self.addition_name + self.addition_description
+        return self.adds_name + self.adds_description
