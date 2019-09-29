@@ -16,6 +16,7 @@ Including another URLconf
 from rest_framework_swagger.views import get_swagger_view
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 
 
 urlpatterns = [
