@@ -7,13 +7,17 @@ services:
     environment:
       DB_USER: admin
       DB_PASS: admin
-    command: python manage.py runserver 0.0.0.0:8002
+      GATEWAY_PATH: http://api-gateway:5000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/project
     ports:
-      - 8002:8002
+      - 8002:8000
     depends_on:
       - db
+    networks: 
+      - qr-comer
+      - default
   
   db:
     container_name: order-service-db
@@ -25,7 +29,14 @@ services:
       POSTGRES_PASSWORD: admin
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks: 
+      - default
     
 volumes:
   pgdata:
     driver: local
+
+networks: 
+  qr-comer:
+    external:
+      name: qr-comer
