@@ -33,11 +33,7 @@ class CheckOrderAPITest(APITestCase):
 
 
     def test_delete_order_with_right_params(self):
-<<<<<<< HEAD
         pk = default_number_identification 
-=======
-        pk = default_number_identification
->>>>>>> 33a50cbe48ba4789df91225180882890c6cc8371
 
         data = create_order(default_name, default_number_identification, default_description, default_quantity)
         response = self.client.post('/create_order/', data=data)
