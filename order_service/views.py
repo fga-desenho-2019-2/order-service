@@ -2,13 +2,11 @@ from order_service.models import Order, Adds
 from django.http import HttpResponse, JsonResponse
 from rest_framework import permissions, generics
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.generics import CreateAPIView
 from rest_framework.authtoken.models import Token
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .serializers import OrderSerializer, AddsSerializer
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
 from rest_framework.status import (
     HTTP_403_FORBIDDEN,
     HTTP_200_OK,
