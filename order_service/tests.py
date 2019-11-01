@@ -68,7 +68,7 @@ class CheckOrderAdds(APITestCase):
 
 
     def test_edit_order_with_missing_params_to_adds(self):
-        request_1 = {'adds_name': 'test_order', 'adds_description': 'some description', 'adds_quantity': '2'}
-        response_1 = self.client.post('edit_adds/', request_1)
-        self.assertEqual(response_1.status_code, 404)
+        data_adds = create_adds(adds_name, '', adds_description, adds_number_identification, adds_pk)
+        response = self.client.post('edit_adds/', data_adds)
+        self.assertEqual(response.status_code, 404)
     

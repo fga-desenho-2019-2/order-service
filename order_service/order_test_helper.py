@@ -32,7 +32,7 @@ default_quantity = 2
 default_description = "Good description"
 default_pk = 1
 
-adds_name = "Queijo"
+adds_name = "Cheeseeee"
 adds_quantity = 2
 adds_description = "Put that cheese"
 adds_number_identification = 1
