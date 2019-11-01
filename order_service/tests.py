@@ -18,31 +18,6 @@ class CheckOrderAPITest(APITestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    def test_create_order_with_status_0(number_identification, status=0):
-
-        Order.objects.create(
-            name = default_name,
-            description = default_description,
-            quantity = default_quantity,
-            number_identification = default_number_identification)
-
-
-    def test_delete_order_with_right_params(self):
-        pk = default_number_identification 
-
-        data = create_order(default_name, default_number_identification, default_description, default_quantity)
-        response = self.client.post('/create_order/', data=data)
-        self.assertEqual(response.status_code, 200)
-
-        data2 = {}
-        response2 = self.client.post('/list_orders/', data2)
-        self.assertEqual(response2.status_code, 200)
-
-        data3 = {'default_number_identification': data2}
-        response3 = self.client.post('/delete_order/', data=data3, format='json')
-        self.assertEqual(response3.status_code, 404)
-
-
     def test_delete_order_with_wrong_id(self):
         data = create_order(default_name, default_number_identification, default_pk, default_quantity)
         response = self.client.post('/delete_order/', data=data)
@@ -50,15 +25,18 @@ class CheckOrderAPITest(APITestCase):
 
 
     def test_list_orders(self):
-        request_1 = {}
-        response_1 = self.client.post('/list_orders/', request_1)
+        data = create_order(default_name, default_number_identification , default_pk, default_quantity)
+        response_1 = self.client.post('/create_order/', data=data)
         self.assertEqual(response_1.status_code, 200)
+
+        response_2 = self.client.post('/list_orders/', data=data)
+        self.assertEqual(response_2.status_code, 200)
 
 
     def test_edit_order_with_missing_params(self):
-        request_1 = {'name': 'test_order', 'description': 'test_description', 'quantity': '2'}
-        response_1 = self.client.post('edit_order/', request_1)
-        self.assertEqual(response_1.status_code, 404)
+        data = create_order(default_name, '' , default_pk, default_quantity)
+        response_2 = self.client.post('edit_order/', data=data)
+        self.assertEqual(response_2.status_code, 404)
 
 
 class CheckOrderAdds(APITestCase):
@@ -76,15 +54,18 @@ class CheckOrderAdds(APITestCase):
             adds_quantity = adds_quantity,
             adds_number_identification = adds_number_identification)
 
+
     def test_delete_adds_with_wrong_id(self):
         data = create_order(adds_name, adds_number_identification, adds_pk, adds_quantity)
         response = self.client.post('/delete_adds/', data=data)
         self.assertEqual(response.status_code, 404)
 
+
     def test_list_adds(self):
         request_1 = {}
         response_1 = self.client.post('/list_adds/', request_1)
         self.assertEqual(response_1.status_code, 200)
+
 
     def test_edit_order_with_missing_params_to_adds(self):
         request_1 = {'adds_name': 'test_order', 'adds_description': 'some description', 'adds_quantity': '2'}
