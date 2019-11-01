@@ -5,14 +5,8 @@ import json
 from django.core import serializers
 from .serializers import OrderSerializer
 from .order_test_helper import create_order
-
-
-default_name = "Good name"
-default_number_identification = 1
-default_quantity = 2
-default_description = "Good description"
-default_pk = 1
-
+from .order_test_helper import (default_description, default_name, 
+                                default_number_identification, default_pk, default_quantity)
 
 class CheckOrderAPITest(APITestCase):
 
@@ -47,12 +41,10 @@ class CheckOrderAPITest(APITestCase):
         response3 = self.client.post('/delete_order/', data=data3, format='json')
         self.assertEqual(response3.status_code, 404)
 
-
-    def test_delete_order_with_unmatching_id(self):
-        request_2 = {'number_identification': 'p'}
-        response_2 = self.client.post('/delete_order/', request_2)
-        self.assertEqual(response_2.status_code, 404)
-
+    def test_delete_order_with_wrong_id(self):
+        data = create_order(default_name, default_number_identification, default_pk, default_quantity)
+        response = self.client.post('/delete_order/', data=data)
+        self.assertEqual(response.status_code, 404)
 
     def test_list_orders(self):
         request_1 = {}
