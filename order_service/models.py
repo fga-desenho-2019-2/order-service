@@ -3,15 +3,8 @@ from django.db import models
 # Create your models here.
 
 class Order(models.Model):
-
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length = 100)
-    quantity = models.IntegerField()
+    observation = models.CharField(max_length = 100)
     number_identification = models.IntegerField(primary_key = True)
-
-    def __str__(self):
-        return self.name
-
 
 class Adds(models.Model):
 
@@ -22,3 +15,9 @@ class Adds(models.Model):
 
     def __str__(self):
         return self.adds_name + self.adds_description
+
+class Item(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    name = models.CharField(max_length=100)
+    value = models.IntegerField()
+    quantity = models.IntegerField()

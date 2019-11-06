@@ -2,11 +2,12 @@ from order_service.models import Order, Adds
 from django.http import HttpResponse, JsonResponse
 from rest_framework import permissions, generics
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.authtoken.models import Token
 from django.shortcuts import render
-from .serializers import OrderSerializer, AddsSerializer
+from .serializers import OrderSerializer, AddsSerializer, ItemSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.status import (
@@ -26,19 +27,27 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['POST'])
 def create_order(request):
-    serializer = OrderSerializer(data=request.data)
-    data = {}
-
+    data = JSONParser().parse(request)
+    serializer = OrderSerializer(data=data)
+    
     if serializer.is_valid():
-        order = serializer.save()
-        data['response'] = 'Pedido registrado com sucesso'
+        serializer.save()
+        return JsonResponse(serializer.data, status=201, safe=False)
+    
+    return JsonResponse(serializer.errors, status=400, safe=False)
 
-    else:
-        data = serializer.errors
+@api_view(['POST'])
+def create_item(request):
+    data = JSONParser().parse(request)
+    serializer = ItemSerializer(data=data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=201, safe=False)
+    
+    return JsonResponse(serializer.errors, status=400, safe=False)
 
-    return Response(data)
-
-@api_view(["POST"])
+@api_view(["GET"])
 def list_orders(request):
     orders = Order.objects.all().values()
     return Response(data=orders)
