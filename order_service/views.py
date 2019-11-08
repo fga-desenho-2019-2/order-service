@@ -28,13 +28,23 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['POST'])
 def create_order(request):
     data = JSONParser().parse(request)
-    serializer = OrderSerializer(data=data)
     
-    if serializer.is_valid():
-        serializer.save()
-        return JsonResponse(serializer.data, status=201, safe=False)
+    items_data = data.pop('items')
+
+    serializer_order = OrderSerializer(data=data)
+    serializer_item  = ItemSerializer(data=items_data)
+
+    if serializer_order.is_valid():
+        serializer_order.save()
+        return JsonResponse(serializer_order.data, status=201, safe=False)
+    else:
+        return JsonResponse(serializer_order.errors, status=400, safe=False)
     
-    return JsonResponse(serializer.errors, status=400, safe=False)
+    if serializer_item.is_valid():
+        serializer_item.save()
+        return JsonResponse(serializer_item.data, status=201, safe=False)
+    else:
+        return JsonResponse(serializer_item.errors, status=400, safe=False)
 
 @api_view(['POST'])
 def create_item(request):

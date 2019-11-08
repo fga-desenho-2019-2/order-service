@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 
 class Order(models.Model):
-    observation = models.CharField(max_length = 100)
-    number_identification = models.IntegerField(primary_key = True)
+    observation = models.CharField(max_length = 100, blank=True)
+    number_identification = models.AutoField(primary_key = True)
 
 class Adds(models.Model):
 
