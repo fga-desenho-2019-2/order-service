@@ -1,20 +1,22 @@
-# from order_service.models import Order, Adds
-# from django.http import HttpResponse, JsonResponse
+from order_service.models import Order, OrderStatus, Item
+from django.http import HttpResponse, JsonResponse
 # from rest_framework import permissions, generics
-# from rest_framework.response import Response
-# from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.core import serializers
+from rest_framework.decorators import action
 # from rest_framework.generics import CreateAPIView
 # from rest_framework.authtoken.models import Token
 # from django.shortcuts import render
-# from .serializers import OrderSerializer, AddsSerializer
-# from django.shortcuts import get_object_or_404
-# from rest_framework.decorators import api_view
-# from rest_framework.status import (
-#     HTTP_403_FORBIDDEN,
-#     HTTP_200_OK,
-#     HTTP_404_NOT_FOUND,
-#     HTTP_400_BAD_REQUEST,
-# )
+from .serializers import OrderSerializer, OrderStatusSerializer, ItemSerializer
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.status import (
+    HTTP_403_FORBIDDEN,
+    HTTP_200_OK,
+    HTTP_404_NOT_FOUND,
+    HTTP_400_BAD_REQUEST,
+    HTTP_201_CREATED
+)
 
 # class OrderList(generics.ListCreateAPIView):
 #     queryset = Order.objects.all()
@@ -24,24 +26,75 @@
 #     queryset = Order.objects.all()
 #     serializer_class = OrderSerializer
 
-# @api_view(['POST'])
-# def create_order(request):
-#     serializer = OrderSerializer(data=request.data)
-#     data = {}
 
-#     if serializer.is_valid():
-#         order = serializer.save()
-#         data['response'] = 'Pedido registrado com sucesso'
 
-#     else:
-#         data = serializer.errors
 
-#     return Response(data)
+@api_view(['GET'])
+def list_user_orders(request, cpf):
+    orders = Order.objects.filter(cpf_user = cpf)
+    if not orders:
+        return JsonResponse({"message": "Without user orders"}, status=HTTP_404_NOT_FOUND)
+    serializer = OrderSerializer(orders, many=True)
+    return JsonResponse(serializer.data, safe=False)
+    
 
-# @api_view(["GET"])
-# def list_orders(request):
-#     orders = Order.objects.all().values()
-#     return Response(data=orders)
+@api_view(['GET'])
+def list_all_orders(request):
+    orders = Order.objects.all()
+    if not orders:
+        return JsonResponse({"message": "Without orders"}, status=HTTP_404_NOT_FOUND)
+    serializer = OrderSerializer(orders, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def list_restaurant_orders(request, cnpj):
+    orders = Order.objects.filter(cnpj_restaurant = cnpj)
+    if not orders:
+        return JsonResponse({"message": "Without restaurant orders"}, status=HTTP_404_NOT_FOUND)
+    serializer = OrderSerializer(orders, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['PUT'])
+def change_order_status(request):
+    return Response("pedidos")
+
+
+@api_view(['GET'])
+def cancel_order(request):
+    return Response("pedidos")
+
+
+@api_view(['POST'])
+def create_order(request):
+    """
+    Create an order with items
+    """
+    serializer = OrderSerializer(data = request.data)
+    if serializer.is_valid():
+        print(serializer)
+        # serializer.save()
+        return JsonResponse(serializer.data, status=HTTP_201_CREATED)
+    return JsonResponse(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def list_status(request):
+    status = OrderStatus.objects.all()
+    if not status:
+        return JsonResponse({"message": "Status not exists"}, status=HTTP_404_NOT_FOUND)
+    serializer = OrderStatusSerializer(status, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def list_items(request):
+    items = Item.objects.all()
+    if not items:
+        return JsonResponse({"message": "Items not exists"}, status=HTTP_404_NOT_FOUND)
+    serializer = OrderStatusSerializer(items, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 # @api_view(['DELETE'])
 # def delete_order(request, number_identification):

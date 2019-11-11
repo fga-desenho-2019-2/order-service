@@ -18,6 +18,9 @@ class OrderStatus(models.Model):
         default='INI'
     )
 
+    def __str__(self):
+        return self.description
+
 
 class Order(models.Model):
 
@@ -25,11 +28,12 @@ class Order(models.Model):
     cod = models.CharField(max_length=20)
     cnpj_restaurant = models.CharField(max_length=16)
     value = models.FloatField()
-    avaliation_description = models.CharField(max_length=200)
-    avaliation_number = models.IntegerField()
-    status = models.OneToOneField(
+    avaliation_description = models.CharField(max_length=200, blank=True, null=True)
+    avaliation_number = models.IntegerField(blank=True, null=True)
+    status = models.ForeignKey(
         OrderStatus,
         on_delete=models.CASCADE,
+        related_name='status'
     )
 
     def __str__(self):
@@ -38,11 +42,17 @@ class Order(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
     value = models.FloatField()
     observation = models.CharField(max_length=200)
     quantity = models.IntegerField()
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, 
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+
+    def __str__(self):
+        return self.name
 
 
 
