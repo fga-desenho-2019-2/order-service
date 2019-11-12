@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     #libs
     'rest_framework_swagger',
     'rest_framework',
-
+    'brutils',
+    
     #my apps
     'order_service',
 ]
