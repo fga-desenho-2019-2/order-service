@@ -1,6 +1,6 @@
 from .models import Order, Item
 from rest_framework import serializers
-from .statics.status import ORDER_STATUS_DICT
+from ..statics.status import ORDER_STATUS_DICT
 
 
 class ItemSerializer(serializers.ModelSerializer):

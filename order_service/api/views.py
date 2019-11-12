@@ -1,4 +1,4 @@
-from order_service.models import Order
+from order_service.api.models import Order
 from django.http import JsonResponse
 from .serializers import OrderSerializer, ItemSerializer
 from rest_framework.decorators import api_view
