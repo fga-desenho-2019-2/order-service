@@ -1,25 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
-class OrderStatus(models.Model):
-    STATUS_CHOICE = [
-        ('INI', 'Iniciado'),
-        ('CAN', 'Cancelado'),
-        ('AND', 'Em andamento'),
-        ('PROC', 'Em processamento'),
-        ('PREP', 'Sendo preparado'),
-        ('AGUARD', 'Aguardando retirada'),
-        ('FIN', 'Finalizado'),
-    ]
-    description = models.CharField(
-        max_length=6,
-        choices=STATUS_CHOICE,
-        default='INI'
-    )
-
-    def __str__(self):
-        return self.description
+from .statics.status import ORDER_STATUS 
 
 
 class Order(models.Model):
@@ -30,10 +10,9 @@ class Order(models.Model):
     value = models.FloatField()
     avaliation_description = models.CharField(max_length=200, blank=True, null=True)
     avaliation_number = models.IntegerField(blank=True, null=True)
-    status = models.ForeignKey(
-        OrderStatus,
-        on_delete=models.CASCADE,
-        related_name='status'
+    status = models.PositiveSmallIntegerField(
+        choices=ORDER_STATUS,
+        default=1
     )
 
     def __str__(self):
@@ -43,7 +22,10 @@ class Order(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=100)
     value = models.FloatField()
-    observation = models.CharField(max_length=200)
+    observation = models.CharField(
+        max_length=200,
+        blank=True
+    )
     quantity = models.IntegerField()
     order = models.ForeignKey(
         Order, 
