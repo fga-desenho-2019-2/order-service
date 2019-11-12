@@ -37,12 +37,15 @@ def list_restaurant_orders(request, cnpj):
 
 
 @api_view(['PUT'])
-def change_order_status(request):
+def update_status_order(request, id_order, id_status):
     """
     Edit an order status
     """
-    return JsonResponse({ "msg": "Status changed"})
-
+    order = Order.objects.filter(id = id_order)
+    if not order:
+        return JsonResponse({"message": "No order found"}, status=HTTP_404_NOT_FOUND)
+    order.update(status=id_status)
+    return JsonResponse({ "message": "Status changed" }, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
