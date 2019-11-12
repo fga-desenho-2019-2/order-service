@@ -20,7 +20,7 @@ from django.conf.urls import url
 
 
 urlpatterns = [
-    path('api/', include('order_service.urls')),
+    path('api/', include('order_service.api.urls')),
     path ('', get_swagger_view('Order Service API')),
     path('admin/', admin.site.urls),
 

@@ -1,5 +1,5 @@
 from django.db import models
-from .statics.status import ORDER_STATUS 
+from ..statics.status import ORDER_STATUS 
 
 
 class Order(models.Model):
