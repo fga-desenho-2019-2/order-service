@@ -1,23 +1,40 @@
 from django.db import models
+from .statics.status import ORDER_STATUS 
 
-# Create your models here.
 
 class Order(models.Model):
-    observation = models.CharField(max_length = 100, blank=True)
-    number_identification = models.AutoField(primary_key = True)
 
-class Adds(models.Model):
-
-    adds_name = models.CharField(max_length = 50)
-    adds_quantity = models.IntegerField()
-    adds_description = models.TextField(max_length = 100)
-    adds_number_identification = models.IntegerField(primary_key = True)
+    cpf_user = models.CharField(max_length=11)
+    cod = models.CharField(max_length=20)
+    cnpj_restaurant = models.CharField(max_length=16)
+    value = models.FloatField()
+    avaliation_description = models.CharField(max_length=200, blank=True, null=True)
+    avaliation_number = models.IntegerField(blank=True, null=True)
+    status = models.PositiveSmallIntegerField(
+        choices=ORDER_STATUS,
+        default=1
+    )
 
     def __str__(self):
-        return self.adds_name + self.adds_description
+        return self.cod
+
 
 class Item(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     name = models.CharField(max_length=100)
-    value = models.IntegerField()
+    value = models.FloatField()
+    observation = models.CharField(
+        max_length=200,
+        blank=True
+    )
     quantity = models.IntegerField()
+    order = models.ForeignKey(
+        Order, 
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+
+    def __str__(self):
+        return self.name
+
+
+

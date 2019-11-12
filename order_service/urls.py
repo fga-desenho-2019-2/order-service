@@ -1,19 +1,14 @@
 from django.urls import path
-from django.conf.urls import url
-from order_service import views
-from .views import create_order, list_orders, delete_order, edit_order, create_item
-from .views import create_adds, list_adds, delete_adds, edit_adds
+from .views import (
+    create_order, 
+    update_status_order,
+    list_user_orders, 
+    list_restaurant_orders,
+)
 
 urlpatterns = [
-    # pedidos
     path('create_order/', create_order, name='create_order'),
-    path('create_item/', create_item, name='create_item'),
-    path('list_orders/', list_orders, name='list_orders'),
-    path('edit_order/<int:number_identification>', edit_order, name='edit_order'),
-    path('delete_order/<int:number_identification>', delete_order, name='delete_order'),
-    # adicionais
-    path('create_adds/', create_adds, name='create_adds'),
-    path('list_adds/', list_adds, name='list_adds'),
-    path('edit_adds/<int:adds_number_identification>', edit_adds, name='edit_adds'),
-    path('delete_adds/<int:adds_number_identification>', delete_adds, name='delete_adds')
+    path('list_user_orders/<str:cpf>', list_user_orders, name='list_user_orders'),
+    path('list_restaurant_orders/<str:cnpj>', list_restaurant_orders, name='list_restaurant_orders'),
+    path('update_status_order/<int:id_order>/<int:id_status>', update_status_order, name='update_status_order')
 ]
