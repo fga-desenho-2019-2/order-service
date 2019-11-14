@@ -36,7 +36,19 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'cod', 'value', 'cpf_user', 'cnpj_restaurant', 'items', 'status' ]
     
-    def create(self, validated_data):
+    def create(self, validated_data): 
+        try:
+            cnpj = validated_data['cnpj_restaurant']
+            last_register = Order.objects.filter(cnpj_restaurant=cnpj).latest('id')
+            cod = last_register.__dict__['cod']
+            if cod < 999:
+                cod = cod + 1
+            else:
+                cod = 1
+        except:
+            cod = 1
+
+        validated_data['cod'] = cod
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
         for item_data in items_data:
