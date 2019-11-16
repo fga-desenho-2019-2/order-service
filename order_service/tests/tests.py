@@ -1,14 +1,9 @@
 from django.test import TestCase
-from .models import Order, Adds
+from ..api.models import Order
 from rest_framework.test import APITestCase
 import json
 from django.core import serializers
-from .serializers import OrderSerializer
-from .order_test_helper import create_order, create_adds
-from .order_test_helper import (default_description, default_name, 
-                                default_number_identification, default_pk, 
-                                default_quantity, adds_name, adds_number_identification, 
-                                adds_quantity, adds_description, adds_pk)
+from ..api.serializers import OrderSerializer
 
 class CheckOrderAPITest(APITestCase):
 
