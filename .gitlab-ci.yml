@@ -8,6 +8,7 @@ stages:
   only:
     - /^feature\/+[0-9](-[a-zA-Z0-9_]+)*/ # feature/76-Algum_nome_assim
     - /^bugfix\/+[0-9](-[a-zA-Z0-9_]+)*/ # bugfix/76-Algum_nome_assim
+    - /fix-.*/
     - master
     - develop
     - tags # 0.1.0-rc.1
@@ -18,7 +19,14 @@ stages:
     - develop
     - tags
 
-linting:
+tests:
+  image: python:3.7-alpine
+  stage: lint
+  script:
+    - echo $KUBECTL_CONFIG
+
+
+.linting:
   image: python:3.6
   stage: lint
   before_script:
@@ -29,7 +37,7 @@ linting:
   allow_failure: true
   <<: *all_branches
 
-tests:
+.tests:
   image: python:3.6
   stage: test
   services:
@@ -50,7 +58,7 @@ tests:
     - ./manage.py test
   <<: *all_branches
 
-build image:
+.build image:
   stage: build
   image: docker:stable
   services:
@@ -73,7 +81,7 @@ build image:
     - docker push $IMAGE
   <<: *all_branches
 
-deploy image:
+.deploy image:
   stage: deploy
   image: diemscott/rancher-cli-k8s:v2.0.2
   script:
