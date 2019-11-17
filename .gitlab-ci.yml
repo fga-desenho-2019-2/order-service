@@ -20,13 +20,13 @@ stages:
     - tags
 
 tests:
-  image: lachlanevenson/k8s-kubectl
+  image: qrcomer/kubectl
   stage: lint
   script:
-    - echo $KUBECTL_CONFIG
-    - cat $KUBECTL_CONFIG
     - export KUBECONFIG=$KUBECTL_CONFIG
     - kubectl get namespaces
+    - kubectl -n homolog scale --current-replicas=1 --replicas=0 deployment/order-service
+    - kubectl -n homolog scale --current-replicas=0 --replicas=1 deployment/order-service 
 
 
 .linting:
