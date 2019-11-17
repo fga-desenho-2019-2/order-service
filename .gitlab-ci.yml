@@ -20,11 +20,13 @@ stages:
     - tags
 
 tests:
-  image: python:3.7-alpine
+  image: lachlanevenson/k8s-kubectl
   stage: lint
   script:
     - echo $KUBECTL_CONFIG
     - cat $KUBECTL_CONFIG
+    - export KUBECONFIG=$KUBECTL_CONFIG
+    - kubectl get namespaces
 
 
 .linting:
