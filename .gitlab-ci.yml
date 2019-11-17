@@ -1,6 +1,7 @@
 stages:
   - lint
   - test
+  - quality
   - build
   - deploy
 
@@ -8,6 +9,7 @@ stages:
   only:
     - /^feature\/+[0-9](-[a-zA-Z0-9_]+)*/ # feature/76-Algum_nome_assim
     - /^bugfix\/+[0-9](-[a-zA-Z0-9_]+)*/ # bugfix/76-Algum_nome_assim
+    - /fix-.*/
     - master
     - develop
     - tags # 0.1.0-rc.1
@@ -50,6 +52,18 @@ tests:
     - ./manage.py test
   <<: *all_branches
 
+radon:
+  image: python:3.6
+  stage: quality
+  before_script:
+    - pip install radon
+  script:
+    - radon mi -j order_service > mi.radon.json
+    - radon cc -j order_service > cc.radon.json
+  artifacts:
+    paths:
+      - '*.radon.json'
+
 build image:
   stage: build
   image: docker:stable
@@ -73,12 +87,12 @@ build image:
     - docker push $IMAGE
   <<: *all_branches
 
-deploy image:
+deploy:
+  image: qrcomer/kubectl
   stage: deploy
-  image: diemscott/rancher-cli-k8s:v2.0.2
   script:
-    - echo 1 | rancher login -t "$RANCHER_API_TOKEN" "$RANCHER_SERVER_URL"
-    - rancher context switch "$CONTEXT_HOMOLOG"
-    - rancher kubectl -n homolog scale --current-replicas=1 --replicas=0 deployment/order-service
-    - rancher kubectl -n homolog scale --current-replicas=0 --replicas=1 deployment/order-service
+    - export KUBECONFIG=$KUBECTL_CONFIG
+    - kubectl get namespaces
+    - kubectl -n homolog scale --current-replicas=1 --replicas=0 deployment/order-service
+    - kubectl -n homolog scale --current-replicas=0 --replicas=1 deployment/order-service
   <<: *protected_branches
