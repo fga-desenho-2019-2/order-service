@@ -3,3 +3,5 @@ djangorestframework>=3.10
 psycopg2==2.8.3
 django-rest-swagger
 brutils
+coverage
+pytest-cov

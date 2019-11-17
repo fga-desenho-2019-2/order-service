@@ -12,26 +12,29 @@ from rest_framework.status import (
 
 
 @api_view(['GET'])
-def list_user_orders(request, cpf):
+def list_user_orders(request, cpf, status):
     """
-    List all orders from a specific user
+    List orders from a specific user
     """
-    orders = Order.objects.filter(cpf_user = cpf)
-    if not orders:
-        return JsonResponse({"message": "Without user orders"}, status=HTTP_404_NOT_FOUND)
+    if not status:
+        orders = Order.objects.filter(cpf_user = cpf)
+    else:
+        orders = Order.objects.filter(cpf_user = cpf, status = status)
+
     serializer = OrderSerializer(orders, many=True)
     return JsonResponse(serializer.data, safe=False)
-    
 
 
 @api_view(['GET'])
-def list_restaurant_orders(request, cnpj):
+def list_restaurant_orders(request, cnpj, status):
     """
-    List all orders from a specific restaurant
+    List orders from a specific restaurant
     """
-    orders = Order.objects.filter(cnpj_restaurant = cnpj)
-    if not orders:
-        return JsonResponse({"message": "Without restaurant orders"}, status=HTTP_404_NOT_FOUND)
+    if not status:
+        orders = Order.objects.filter(cnpj_restaurant = cnpj)
+    else: 
+        orders = Order.objects.filter(cnpj_restaurant = cnpj, status = status)
+
     serializer = OrderSerializer(orders, many=True)
     return JsonResponse(serializer.data, safe=False)
 
