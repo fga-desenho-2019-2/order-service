@@ -24,6 +24,7 @@ tests:
   stage: lint
   script:
     - echo $KUBECTL_CONFIG
+    - cat $KUBECTL_CONFIG
 
 
 .linting:
