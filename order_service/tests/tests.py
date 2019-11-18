@@ -6,64 +6,51 @@ from django.core import serializers
 from ..api.serializers import OrderSerializer
 
 class CheckOrderAPITest(APITestCase):
+    def setUp(self):
+        self.data = {
+            'cpf_user':'05333208107',
+            'cnpj_restaurant':'33345811000183',
+            'value':30.59,
+            'items':[
+            {
+                'name':'Combo Big Mac',
+                'value':22.19,
+                'observation':'sem pão',
+                'quantity':1
+            }],
+            'status': 1
+        }
 
     def test_create_order_with_correct_params(self):
-        data = create_order(default_name, default_number_identification, default_description, default_quantity)
-        response = self.client.post('/create_order/', data=data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/api/create_order/', data=self.data, format='json')
+        self.assertEqual(response.status_code, 201)
 
+    def test_create_order_with_wrong_params(self):
+        data = {
+            'cnpj_restaurant':'33345811000183',
+            'value':30.59,
+            'items':[
+            {
+                'name':'Combo Big Mac',
+                'value':22.19,
+                'observation':'sem pão',
+                'quantity':1
+            }]
+        }
+        response = self.client.post('/api/create_order/', data=data, format='json')
+        self.assertEqual(response.status_code, 400)
 
-    def test_delete_order_with_wrong_id(self):
-        data = create_order(default_name, default_number_identification, default_pk, default_quantity)
-        response = self.client.post('/delete_order/', data=data)
-        self.assertEqual(response.status_code, 404)
+    def test_list_user_orders(self):
+        self.client.post('/api/create_order/', data=self.data)
+        response_get = self.client.get('/api/list_user_orders/05333208107/1')
+        self.assertEqual(response_get.status_code, 200)
 
+    def test_list_restaurant_orders(self):
+        self.client.post('/api/create_order/', data=self.data)
+        response_get_restaurant = self.client.get('/api/list_restaurant_orders/33345811000183/1')
+        self.assertEqual(response_get_restaurant.status_code, 200)
 
-    def test_list_orders(self):
-        data = create_order(default_name, default_number_identification , default_pk, default_quantity)
-        response_1 = self.client.post('/create_order/', data=data)
-        self.assertEqual(response_1.status_code, 200)
-
-        response_2 = self.client.post('/list_orders/', data=data)
-        self.assertEqual(response_2.status_code, 200)
-
-
-    def test_edit_order_with_missing_params(self):
-        data = create_order(default_name, '' , default_pk, default_quantity)
-        response_2 = self.client.post('edit_order/', data=data)
-        self.assertEqual(response_2.status_code, 404)
-
-
-class CheckOrderAdds(APITestCase):
-
-    def test_create_adds_with_correct_adds(self):
-        data_adds = create_adds(adds_name, adds_number_identification, adds_description, adds_quantity)
-        response = self.client.post('/create_adds/', data_adds=data_adds)
-        self.assertEqual(response.status_code, 200)
-
-
-    def test_create_adds_with_status_0(number_identification, status=0):
-        Adds.objects.create(
-            adds_name = adds_name,
-            adds_description = adds_description,
-            adds_quantity = adds_quantity,
-            adds_number_identification = adds_number_identification)
-
-
-    def test_delete_adds_with_wrong_id(self):
-        data = create_order(adds_name, adds_number_identification, adds_pk, adds_quantity)
-        response = self.client.post('/delete_adds/', data=data)
-        self.assertEqual(response.status_code, 404)
-
-
-    def test_list_adds(self):
-        request_1 = {}
-        response_1 = self.client.post('/list_adds/', request_1)
-        self.assertEqual(response_1.status_code, 200)
-
-
-    def test_edit_order_with_missing_params_to_adds(self):
-        data_adds = create_adds(adds_name, '', adds_description, adds_number_identification, adds_pk)
-        response = self.client.post('edit_adds/', data_adds)
-        self.assertEqual(response.status_code, 404)
-    
+    # def test_update_status_order(self):
+    #     self.client.post('/api/create_order/', data=self.data, format='json')
+    #     response_put_order_status = self.client.put('/api/update_status_order/1/1', format='json')
+    #     self.assertEqual(response_put_order_status.status_code, 200)        
