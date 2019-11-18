@@ -51,6 +51,27 @@ def update_status_order(request, id_order, id_status):
     return JsonResponse({ "message": "Status changed" }, status=HTTP_200_OK)
 
 
+@api_view(['PUT'])
+def update_avaliation_order(request, id_order):
+    """
+    Edit an order avaliation
+    """
+    try:
+        order = Order.objects.filter(id = id_order)
+        if not order:
+            return JsonResponse({"message": "No order found"}, status=HTTP_404_NOT_FOUND)
+        desc = request.data["avaliation_description"]
+        number = request.data["avaliation_number"]
+        order.update(avaliation_description=desc, avaliation_number=number)
+        return JsonResponse({ "message": "Avaliation changed" }, status=HTTP_200_OK)
+    except:
+        return JsonResponse({
+            "avaliation_description": ["Este campo é obrigatório"],
+            "avaliation_number": ["Este campo é obrigatório"],
+        }, status=HTTP_400_BAD_REQUEST) 
+
+
+
 @api_view(['POST'])
 def create_order(request):
     """
